@@ -1,0 +1,5 @@
+# Ignorar arquivos de configuração sensíveis
+/config/config.php
+
+# Opcional: ignorar todos os arquivos PHP dentro de config
+#/config/*.php
