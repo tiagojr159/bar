@@ -523,8 +523,7 @@ $(function () {
           : `<div class="pm-noimg">sem imagem</div>`;
         return `
           <div class="pm-card" data-id="${p.id}" data-preco="${p.preco}" data-nome="${escapeHtml(p.nome)}" data-img="${p.imagem ? escapeHtml(p.imagem) : ''}">
-            <span class="pm-price">R$ ${window.formatMoney(p.preco)}</span>
-            <div class="pm-thumb">${img}</div>
+            <div class="pm-thumb">${img}<span class="pm-price">R$ ${window.formatMoney(p.preco)}</span></div>
             <div class="pm-name" title="${escapeHtml(p.nome)}">${escapeHtml(p.nome)}</div>
           </div>
         `;
@@ -589,6 +588,9 @@ $(function () {
   $(document).on('click', '.remove-item-btn', function () {
     const pedidoId = $(this).data('pedido-id');
     const prodId = $(this).data('prod-id');
+    const nomeProduto = $(this).closest('.prod-thumb').attr('title') || 'este item';
+
+    if (!window.confirm(`Deseja remover ${nomeProduto} da mesa?`)) return;
 
     $.ajax({
       url: 'remover_item.php',
@@ -618,7 +620,8 @@ $(function () {
   });
 
   // Ao clicar numa .nm-card (cards do novo modal), espelha nas globais e HABILITA os 3 botões de pagar
-  $(document).on('click', '.nm-card', function () {
+  $(document).on('click', '.nm-card', function (e) {
+    if ($(e.target).closest('.sel-badge').length) return;
     const $c = $(this);
     const id    = Number($c.data('id'));
     const nome  = String($c.data('nome')  || '');

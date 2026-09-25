@@ -4,7 +4,7 @@ header('Content-Type: application/json; charset=utf-8');
 
 if (session_status() !== PHP_SESSION_ACTIVE) session_start();
 
-require_once dirname(__DIR__) . '/vendor/autoload.php'; // carrega autoload do Composer
+require_once dirname(__DIR__) . '/bootstrap.php'; // carrega o autoload compatível com PHP 7.4
 
 use App\Support\DB;
 

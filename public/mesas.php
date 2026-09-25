@@ -180,6 +180,89 @@ foreach ($mesas as $mesa_id => $mesa) {
         transform: translateY(0)
       }
     }
+
+    /* Acabamento visual da tela de mesas */
+    body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;background:#f4f7f4;color:#17251b}
+    .container{width:min(1240px,calc(100% - 40px));max-width:none;margin:36px auto 60px;padding:0}
+    .page-header{display:flex;justify-content:space-between;align-items:center;gap:20px;margin-bottom:20px}
+    .page-header h2{margin:0;color:#173f28;font-size:clamp(1.55rem,2.5vw,2rem);font-weight:750;letter-spacing:-.035em;line-height:1.2}
+    .page-header .btn{flex:0 0 auto;min-height:46px;padding:0 20px;border-radius:12px;background:#087c45;color:#fff;font-size:.94rem;font-weight:700;box-shadow:0 6px 14px rgba(8,124,69,.18);transition:background .18s,transform .18s,box-shadow .18s}
+    .page-header .btn:hover{background:#06683a;transform:translateY(-1px);box-shadow:0 9px 20px rgba(8,124,69,.22)}
+    .caixa-resumo{position:relative;isolation:isolate;min-height:92px;box-sizing:border-box;margin:0 0 26px;padding:20px 24px;border:1px solid #e3ebe3;border-radius:18px;background:linear-gradient(115deg,#fff 0%,#fbfdf9 100%);box-shadow:0 8px 26px rgba(20,48,28,.055);color:#174d2c;overflow:hidden}
+    .caixa-resumo:before{content:"";position:absolute;z-index:-1;right:-36px;top:-66px;width:190px;height:190px;border-radius:50%;background:rgba(115,181,115,.09)}
+    .caixa-resumo small{color:#738075;font-size:.83rem;font-weight:600;letter-spacing:.015em;margin-bottom:7px}
+    .caixa-resumo strong{font-size:1.75rem;font-weight:800;letter-spacing:-.035em;font-variant-numeric:tabular-nums}
+    .caixa-resumo-link{padding:10px 13px;border-radius:10px;background:#edf6ee;color:#17633a;font-size:.87rem;transition:background .18s}
+    .caixa-resumo:hover .caixa-resumo-link{background:#e1f0e3}
+    .mesas-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));align-items:start;gap:18px}
+    .mesa-card--simple{padding:17px;border:1px solid #e7ece7;border-radius:18px;margin:0;background:#fff;box-shadow:0 5px 18px rgba(20,48,28,.045);transition:transform .18s,box-shadow .18s,border-color .18s}
+    .mesa-card--simple:hover{transform:translateY(-3px);border-color:#d4e2d5;box-shadow:0 13px 28px rgba(20,48,28,.09)}
+    .mesa-head{margin-bottom:15px}
+    .mesa-pill{padding:7px 11px;background:#eff6ef;color:#285d3b;font-size:.86rem;font-weight:700;letter-spacing:.01em}
+    .mesa-total{color:#173f28;font-size:1.08rem;font-weight:800;font-variant-numeric:tabular-nums}
+    .products-grid{grid-template-columns:repeat(auto-fill,minmax(68px,74px));gap:9px;min-height:0}
+    .prod-thumb{aspect-ratio:1;border:1px solid #edf0ed;border-radius:13px;background:#f4f6f3;box-shadow:0 2px 6px rgba(15,40,20,.05)}
+    .prod-thumb img{transition:transform .25s}
+    .prod-thumb:hover img{transform:scale(1.06)}
+    .price-badge{left:5px;top:5px;padding:4px 6px;border-radius:7px;background:rgba(18,35,24,.82);font-size:.65rem;font-weight:700;backdrop-filter:blur(6px)}
+    .remove-item-btn{right:5px;bottom:5px;width:28px;height:28px;padding:0;display:grid;place-items:center;background:rgba(170,48,48,.92);font-size:.8rem;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+    .remove-item-btn{color:transparent!important;font-size:0!important;z-index:4}
+    .remove-item-btn:before,.remove-item-btn:after{content:"";position:absolute;left:50%;top:50%;width:15px;height:2px;border-radius:2px;background:#fff;transform:translate(-50%,-50%) rotate(45deg);pointer-events:none}
+    .remove-item-btn:after{transform:translate(-50%,-50%) rotate(-45deg)}
+    .mesa-actions{gap:9px;margin-top:16px;padding:13px 0 0;background:transparent;border-top:1px solid #eef1ee}
+    .mesa-actions .btn{flex:1 1 0;min-height:42px;padding:0 12px;border-radius:10px;font-size:.82rem;font-weight:700;transition:background .16s,transform .16s}
+    .mesa-actions .btn:hover{transform:translateY(-1px)}
+    .mesa-actions .btn-primary{background:#087c45}.mesa-actions .btn-primary:hover{background:#06683a}
+    .mesa-actions .btn-secondary{background:#eef2ef;color:#435448}.mesa-actions .btn-secondary:hover{background:#e2e9e3}
+    .no-mesas{padding:54px 28px;border:1px solid #e6ece6;border-radius:20px;background:linear-gradient(145deg,#fff,#f9fcf8);box-shadow:0 10px 30px rgba(20,48,28,.05)}
+    .no-mesas p{color:#657267;font-size:1.05rem}
+    .no-mesas .btn{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 18px;border-radius:11px;background:#087c45;color:#fff;font-weight:700}
+    @media(max-width:640px){.container{width:calc(100% - 28px);margin:24px auto 44px}.page-header{align-items:stretch;flex-direction:column;gap:13px}.page-header .btn{width:100%;justify-content:center}.caixa-resumo{padding:17px 18px}.caixa-resumo strong{font-size:1.55rem}.mesas-grid{grid-template-columns:1fr}.mesa-card--simple{padding:15px}.products-grid{grid-template-columns:repeat(auto-fill,minmax(62px,70px))}}
+    /* Modal de novo pedido, redesenhado */
+    #nova-mesa-modal.modal{position:fixed;inset:0;z-index:10020;background:rgba(8,20,13,.72);backdrop-filter:blur(8px);padding:0;overflow:hidden}
+    #nova-mesa-modal .modal-content.modal-produtos{position:relative;display:flex;flex-direction:column;width:min(1080px,calc(100vw - 48px));height:min(88vh,920px);max-height:88vh;margin:6vh auto;border:1px solid rgba(255,255,255,.5);border-radius:26px;background:#f5f7f3;box-shadow:0 32px 100px rgba(0,0,0,.35);overflow:hidden}
+    #nova-mesa-modal .modal-header{flex:0 0 auto;display:flex;align-items:center;justify-content:space-between;gap:20px;padding:23px 30px;background:linear-gradient(112deg,#12351f,#0b6c3d);color:#fff;border:0}
+    #nova-mesa-modal .modal-title-group{min-width:0}
+    #nova-mesa-modal .modal-kicker{display:block;margin-bottom:5px;color:#b9e0c2;font-size:.72rem;font-weight:800;letter-spacing:.16em}
+    #nova-mesa-modal .modal-header h3{margin:0;color:#fff;font-size:1.55rem;font-weight:800;letter-spacing:-.035em;line-height:1.15}
+    #nova-mesa-modal .modal-title-group p{margin:7px 0 0;color:rgba(255,255,255,.78);font-size:.92rem;line-height:1.4}
+    #nova-mesa-modal .modal-header .close{flex:0 0 42px;width:42px;height:42px;border:1px solid rgba(255,255,255,.25);border-radius:14px;background:rgba(255,255,255,.12);color:#fff;font-size:24px;transition:background .16s,transform .16s}
+    #nova-mesa-modal .modal-header .close:hover{background:rgba(255,255,255,.22);transform:rotate(4deg)}
+    #nova-mesa-modal .modal-body{flex:1 1 auto;min-height:0;overflow:auto;padding:24px 28px;background:radial-gradient(ellipse at top left,rgba(222,239,223,.58),transparent 45%),#f5f7f3;-webkit-overflow-scrolling:touch}
+    #nm-grid.pm-grid{grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:16px}
+    #nova-mesa-modal .pm-card{position:relative;border:1px solid #e5eae4;border-radius:19px;background:#fff;box-shadow:0 4px 14px rgba(24,47,29,.055);transition:transform .18s,border-color .18s,box-shadow .18s}
+    #nova-mesa-modal .pm-card:hover{transform:translateY(-4px);border-color:#a9cdb0;box-shadow:0 14px 28px rgba(24,47,29,.12)}
+    #nova-mesa-modal .pm-card:active{transform:scale(.985)}
+    #nova-mesa-modal .pm-thumb{position:relative;aspect-ratio:1.15/1;overflow:hidden;background:#e9eee8}
+    #nova-mesa-modal .pm-thumb img{width:100%;height:100%;object-fit:cover;transition:transform .35s}
+    #nova-mesa-modal .pm-card:hover .pm-thumb img{transform:scale(1.045)}
+    #nova-mesa-modal .pm-noimg{width:100%;height:100%;display:grid;place-items:center;padding:14px;color:#718074;background:linear-gradient(145deg,#edf2eb,#e2e9e1);font-size:.9rem}
+    #nova-mesa-modal .pm-name{min-height:55px;padding:13px 14px 15px;color:#1e3023;font-size:1.04rem;font-weight:750;line-height:1.28;white-space:normal;overflow:visible;text-overflow:clip;box-sizing:border-box}
+    #nova-mesa-modal .pm-price,#nova-mesa-modal .pm-stock,#nova-mesa-modal .sel-badge{z-index:2;min-height:34px;display:inline-flex;align-items:center;justify-content:center;padding:7px 11px;border:1px solid rgba(255,255,255,.3);border-radius:11px;color:#fff;font-size:1rem;font-weight:900;line-height:1;font-variant-numeric:tabular-nums;box-shadow:0 4px 12px rgba(0,0,0,.24)}
+    #nova-mesa-modal .pm-price{position:absolute!important;display:inline-flex!important;left:10px!important;top:10px!important;right:auto!important;bottom:auto!important;visibility:visible!important;opacity:1!important;background:rgba(20,34,24,.94);backdrop-filter:blur(8px)}
+    #nova-mesa-modal .pm-stock{position:absolute!important;top:auto!important;right:auto!important;left:10px!important;bottom:10px!important;background:rgba(25,37,28,.84);backdrop-filter:blur(8px)}
+    #nova-mesa-modal .sel-badge{position:absolute!important;right:9px!important;top:9px!important;z-index:10!important;width:38px!important;height:38px!important;min-width:38px!important;min-height:38px!important;padding:0!important;border:2px solid #fff!important;border-radius:50%!important;display:grid!important;place-items:center!important;background:#b94036!important;color:transparent!important;font-size:0!important;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,.25);transition:transform .15s,background .15s}
+    #nova-mesa-modal .sel-badge:before,#nova-mesa-modal .sel-badge:after{content:"";position:absolute;left:50%;top:50%;width:19px;height:3px;border-radius:3px;background:#fff;transform:translate(-50%,-50%) rotate(45deg);pointer-events:none}
+    #nova-mesa-modal .sel-badge:after{transform:translate(-50%,-50%) rotate(-45deg)}
+    #nova-mesa-modal .sel-badge:hover{transform:scale(1.08);background:#a52f27}
+    #nova-mesa-modal .sel-qty{position:absolute;right:10px;bottom:10px;z-index:3;min-width:34px;height:32px;padding:0 8px;display:grid;place-items:center;border:1px solid rgba(255,255,255,.35);border-radius:10px;background:#087c45;color:#fff;font-size:1rem;font-weight:900;line-height:1;font-variant-numeric:tabular-nums;box-shadow:0 4px 12px rgba(0,0,0,.24)}
+    /* Preço sempre visível no modal que adiciona itens a uma mesa aberta */
+    #produtos-modal .pm-thumb{position:relative;overflow:hidden}
+    #produtos-modal .pm-price{position:absolute!important;z-index:5!important;top:9px!important;left:9px!important;right:auto!important;bottom:auto!important;display:inline-flex!important;align-items:center;justify-content:center;min-height:34px;padding:6px 10px;border:1px solid rgba(255,255,255,.65);border-radius:10px;background:rgba(18,28,21,.94);color:#fff!important;font-size:1rem!important;font-weight:900!important;line-height:1!important;font-variant-numeric:tabular-nums;white-space:nowrap;opacity:1!important;visibility:visible!important;text-shadow:none!important;box-shadow:0 3px 10px rgba(0,0,0,.35)}
+    #nova-mesa-modal .nova-mesa-footer{flex:0 0 auto;display:grid!important;grid-template-columns:205px minmax(0,1fr);align-items:center;gap:22px;padding:17px 24px calc(17px + env(safe-area-inset-bottom));background:#fff;border:0;border-top:1px solid #e5ebe5;box-shadow:0 -8px 24px rgba(25,48,29,.055)}
+    #nova-mesa-modal .pedido-total-box{display:flex;flex-direction:column;gap:4px;min-width:0}
+    #nova-mesa-modal .pedido-total-label{color:#78847a;font-size:.7rem;font-weight:850;letter-spacing:.13em}
+    #nova-mesa-modal #am-total{color:#105c32;font-size:2rem;font-weight:900;letter-spacing:-.045em;font-variant-numeric:tabular-nums;white-space:nowrap;line-height:1.05}
+    #nova-mesa-modal .pedido-actions{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px!important}
+    #nova-mesa-modal .pedido-actions .btn{min-width:0;min-height:50px;padding:9px 12px;border:0;border-radius:13px;font-size:.93rem;font-weight:800;line-height:1.15;white-space:normal;transition:transform .16s,box-shadow .16s,background .16s}
+    #nova-mesa-modal .pedido-actions .btn:not(:disabled):hover{transform:translateY(-2px);box-shadow:0 7px 16px rgba(15,48,24,.15)}
+    #nova-mesa-modal .pedido-actions .btn:disabled{opacity:.45;filter:saturate(.45)}
+    #nova-mesa-modal #am-abrir-btn{background:#edf2ed;color:#35483a}
+    #nova-mesa-modal #am-pagar-btn{background:#087c45;color:#fff}
+    #nova-mesa-modal #am-dinheiro-btn,#nova-mesa-modal #am-cartao-btn{background:#fff;color:#2a4632;border:1px solid #dce6dc}
+    #nova-mesa-modal #nm-msg{margin:14px 0 0;padding:12px 14px;border:1px solid #f0d1c8;border-radius:12px;background:#fff5f2;color:#a43d2b;font-size:.95rem;font-weight:700}
+    @media(max-width:700px){#nova-mesa-modal.modal{padding:0}#nova-mesa-modal .modal-content.modal-produtos{width:100vw;height:calc(100dvh - 8px);max-height:calc(100dvh - 8px);margin:8px 0 0;border-radius:25px 25px 0 0;border-bottom:0}#nova-mesa-modal .modal-header{padding:19px 20px 17px}#nova-mesa-modal .modal-header h3{font-size:1.4rem}#nova-mesa-modal .modal-title-group p{font-size:.9rem}#nova-mesa-modal .modal-header .close{flex-basis:40px;width:40px;height:40px}#nova-mesa-modal .modal-body{padding:17px 15px 22px}#nm-grid.pm-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}#nova-mesa-modal .pm-name{min-height:54px;padding:12px 12px 14px;font-size:1rem}#nova-mesa-modal .nova-mesa-footer{grid-template-columns:1fr;gap:12px;padding:13px 15px calc(13px + env(safe-area-inset-bottom))}#nova-mesa-modal .pedido-total-box{flex-direction:row;justify-content:space-between;align-items:baseline}#nova-mesa-modal .pedido-total-label{font-size:.72rem}#nova-mesa-modal #am-total{font-size:1.8rem}#nova-mesa-modal .pedido-actions{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px!important}#nova-mesa-modal .pedido-actions .btn{min-height:46px;font-size:.91rem}}
+    @media(max-width:360px){#nova-mesa-modal .modal-header{padding-left:16px;padding-right:16px}#nova-mesa-modal .modal-body{padding-left:11px;padding-right:11px}#nova-mesa-modal .pm-price,#nova-mesa-modal .pm-stock{min-height:32px;font-size:.94rem;padding:6px 9px}#nova-mesa-modal .sel-badge{width:36px;height:36px;font-size:1.45rem}#nova-mesa-modal .sel-qty{min-width:32px;height:30px;font-size:.95rem}#nova-mesa-modal .pedido-actions .btn{font-size:.86rem}}
   </style>
 </head>
 
@@ -202,7 +285,7 @@ foreach ($mesas as $mesa_id => $mesa) {
       <?php if (empty($mesas)): ?>
         <div class="no-mesas">
           <p>Nenhuma mesa ativa no momento.</p>
-          <a href="pedidos.php" class="btn">Abrir Novo Pedido</a>
+          <button type="button" class="btn" onclick="document.getElementById('nova-mesa-btn').click()">Abrir Novo Pedido</button>
         </div>
       <?php else: ?>
         <?php foreach ($mesas as $mesa): ?>
@@ -276,8 +359,12 @@ foreach ($mesas as $mesa_id => $mesa) {
   <div id="nova-mesa-modal" class="modal" style="display:none;">
     <div class="modal-content modal-produtos">
       <div class="modal-header">
-        <h3>Selecione os produtos</h3>
-        <span class="close nova-mesa-close">&times;</span>
+        <div class="modal-title-group">
+          <span class="modal-kicker">NOVO PEDIDO</span>
+          <h3>Monte seu pedido</h3>
+          <p>Escolha os produtos. Toque novamente para adicionar mais unidades.</p>
+        </div>
+        <button type="button" class="close nova-mesa-close" aria-label="Fechar seleção">&times;</button>
       </div>
 
       <div class="modal-body">
@@ -285,13 +372,11 @@ foreach ($mesas as $mesa_id => $mesa) {
         <div id="nm-msg" class="pm-msg" style="display:none;"></div>
       </div>
 
-      <div class="modal-footer" style="display:flex;gap:8px;align-items:center;justify-content:space-between;">
-        <div style="font-weight:700;">Total: <span id="am-total">R$ 0,00</span></div>
-        <div style="display:flex;gap:8px;">
+      <div class="modal-footer nova-mesa-footer">
+        <div class="pedido-total-box"><span class="pedido-total-label">TOTAL DO PEDIDO</span><strong id="am-total">R$ 0,00</strong></div>
+        <div class="pedido-actions">
           <button id="am-abrir-btn" class="btn btn-secondary" disabled>Abrir mesa</button>
           <button id="am-pagar-btn" class="btn btn-primary" disabled>PIX</button>
-
-          <!-- NOVOS (mínima alteração visual) -->
           <button id="am-dinheiro-btn" class="btn btn-secondary" disabled>Dinheiro</button>
           <button id="am-cartao-btn" class="btn btn-secondary" disabled>Cartão</button>
         </div>
@@ -568,7 +653,7 @@ foreach ($mesas as $mesa_id => $mesa) {
         nmCart = {};
         nmTotal = 0;
         $('#am-total').text('R$ 0,00');
-        $('#am-dinheiro-btn, #am-cartao-btn').prop('disabled', false);
+        $('#am-abrir-btn, #am-pagar-btn, #am-dinheiro-btn, #am-cartao-btn').prop('disabled', true);
 
         $('#nm-msg').hide().text('');
         $('#nm-grid').html('<div style="padding:12px;color:#777;">Carregando produtos...</div>');
@@ -630,18 +715,33 @@ foreach ($mesas as $mesa_id => $mesa) {
         nmCart[id].qtd += 1;
         nmTotal += preco;
 
-        // badge de quantidade na imagem
+        // Controle de remoção e quantidade selecionada.
         const $thumb = $c.find('.pm-thumb');
-        let $badge = $thumb.find('.sel-badge');
-        if ($badge.length) {
-          $badge.text('x' + nmCart[id].qtd);
-        } else {
-          $thumb.append('<span class="sel-badge">x1</span>');
+        if (!$thumb.find('.sel-badge').length) {
+          $thumb.append(`<button type="button" class="sel-badge" data-id="${id}" aria-label="Remover ${esc(nome)}">&times;</button><span class="sel-qty" aria-label="Quantidade">1</span>`);
         }
+        $thumb.find('.sel-qty').text(nmCart[id].qtd);
 
         // atualiza total + habilita botões
         $('#am-total').text('R$ ' + moneyBR(nmTotal));
         $('#am-abrir-btn, #am-pagar-btn, #am-dinheiro-btn, #am-cartao-btn').prop('disabled', false);
+      });
+
+      $(document).on('click', '#nm-grid .sel-badge', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        const id = Number($(this).data('id'));
+        const item = nmCart[id];
+        if (!item) return;
+        nmTotal = Math.max(0, nmTotal - (Number(item.preco) * Number(item.qtd)));
+        delete nmCart[id];
+        if (window.nmCart) delete window.nmCart[id];
+        window.nmTotal = Math.max(0, Number(window.nmTotal || 0) - (Number(item.preco) * Number(item.qtd)));
+        $(this).closest('.pm-thumb').find('.sel-badge, .sel-qty').remove();
+        $('#am-total').text('R$ ' + moneyBR(nmTotal));
+        if (Object.keys(nmCart).length === 0) {
+          $('#am-abrir-btn, #am-pagar-btn, #am-dinheiro-btn, #am-cartao-btn').prop('disabled', true);
+        }
       });
 
       // ---------- Botão: ABRIR MESA (sem pagamento agora) ----------
