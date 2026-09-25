@@ -15,6 +15,18 @@ $conexao = DB::conn();
 
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
+// Apurado do caixa: vendas pagas desde a abertura mais recente.
+$rsAbertura = $conexao->query("SELECT MAX(data_abertura) AS data_abertura FROM abertura_caixa");
+$ultimaAbertura = $rsAbertura ? ($rsAbertura->fetch_assoc()['data_abertura'] ?? null) : null;
+$apuradoCaixa = 0.0;
+if ($ultimaAbertura !== null) {
+  $stApurado = $conexao->prepare("SELECT COALESCE(SUM(total), 0) AS total FROM pedidos WHERE status IN ('pago','fechado') AND COALESCE(data_pagamento, data_pedido) >= ? AND COALESCE(data_pagamento, data_pedido) <= NOW()");
+  $stApurado->bind_param('s', $ultimaAbertura);
+  $stApurado->execute();
+  $apuradoCaixa = (float)($stApurado->get_result()->fetch_assoc()['total'] ?? 0);
+  $stApurado->close();
+}
+
 // Buscar mesas ativas com pedidos em aberto
 $sql = "
    SELECT m.id,
@@ -100,6 +112,13 @@ foreach ($mesas as $mesa_id => $mesa) {
       max-width: min(360px, 92vw);
     }
 
+    .caixa-resumo{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:0 0 24px;padding:18px 22px;border-radius:12px;background:#fff;border:1px solid #e4ece4;box-shadow:0 4px 14px rgba(0,0,0,.06);text-decoration:none;color:#1b5e20;transition:transform .15s,box-shadow .15s}
+    .caixa-resumo:hover{transform:translateY(-2px);box-shadow:0 7px 20px rgba(0,0,0,.1)}
+    .caixa-resumo small{display:block;color:#667267;font-size:.9rem;margin-bottom:4px}
+    .caixa-resumo strong{font-size:1.7rem}
+    .caixa-resumo-link{font-weight:700;white-space:nowrap}
+    @media(max-width:600px){.caixa-resumo{align-items:flex-start;flex-direction:column}.caixa-resumo strong{font-size:1.45rem}}
+
     .notif-card {
       background: #007bff;
       color: #fff;
@@ -173,6 +192,11 @@ foreach ($mesas as $mesa_id => $mesa) {
       <h2>Mesas Ativas</h2>
       <button id="nova-mesa-btn" class="btn btn-primary">+ Novo pedido</button>
     </div>
+
+    <a class="caixa-resumo" href="relatorio_caixa.php" aria-label="Abrir relatório das vendas desde a última abertura do caixa">
+      <span><small>Apurado desde a última abertura do caixa</small><strong>R$ <?= number_format($apuradoCaixa, 2, ',', '.') ?></strong></span>
+      <span class="caixa-resumo-link">Ver relatório →</span>
+    </a>
 
     <div class="mesas-grid">
       <?php if (empty($mesas)): ?>
