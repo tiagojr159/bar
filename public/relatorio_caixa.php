@@ -78,7 +78,7 @@ function moeda($v) { return 'R$ ' . number_format((float)$v, 2, ',', '.'); }
       <?php foreach ($mesas as $mesa): ?>
           <?php foreach ($mesa['pedidos'] as $pedido): ?>
             <article class="pedido" title="Pedido #<?= (int)$pedido['id'] ?>">
-              <time class="pedido-hora" datetime="<?= h(date('c', strtotime($pedido['data_pagamento']))) ?>"><?= h(date('H:i', strtotime($pedido['data_pagamento']))) ?></time>
+              <time class="pedido-hora" datetime="<?= h(date('c', strtotime($pedido['data_pagamento']))) ?>"><?= h(date('H:i', strtotime($pedido['data_pagamento']))) ?> h</time>
               <div class="pedido-icones" aria-label="Itens do pedido">
                 <?php foreach ($pedido['itens'] as $item): ?>
                   <span class="item-icone" title="<?= h($item['nome']) ?> · <?= (int)$item['quantidade'] ?> un.">
