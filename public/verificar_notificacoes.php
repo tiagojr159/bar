@@ -22,7 +22,7 @@ if ($op === 'atender') {
   // 1. Buscar a notificação e pedido associados
   $sql = "
     SELECT n.id, n.pedido_id,
-           p.status, p.forma_pagamento
+           p.status, p.forma_pagamento, p.excluido_em
       FROM notificacoes_pedido n
  LEFT JOIN pedidos p ON p.id = n.pedido_id
      WHERE n.id = ?
@@ -38,6 +38,10 @@ if ($op === 'atender') {
     echo json_encode(['sucesso' => false, 'erro' => 'Notificação não encontrada']);
     exit;
   }
+  if (!empty($row['excluido_em'])) {
+    echo json_encode(['sucesso' => false, 'erro' => 'Pedido excluído']);
+    exit;
+  }
 
   $pedidoId = (int)$row['pedido_id'];
   $status   = strtolower((string)($row['status'] ?? ''));
@@ -51,7 +55,7 @@ if ($op === 'atender') {
   // 3. Se o pedido estiver pago via PIX e ainda estiver "aberto", fechar
   $foiPago = $forma === 'pix' && in_array($status, ['pago', 'paid', 'concluido', 'fechado'], true);
   if ($foiPago && $status === 'pago') {
-    $stmt3 = $con->prepare("UPDATE pedidos SET status = 'fechado' WHERE id = ?");
+    $stmt3 = $con->prepare("UPDATE pedidos SET status = 'fechado' WHERE id = ? AND excluido_em IS NULL");
     $stmt3->bind_param('i', $pedidoId);
     $stmt3->execute();
   }
@@ -80,6 +84,7 @@ $sql = "
   JOIN produtos p   ON p.id = n.produto_id
   LEFT JOIN pedidos ped ON ped.id = n.pedido_id
   WHERE n.estado = 'pendente'
+    AND ped.excluido_em IS NULL
   ORDER BY n.id ASC
   LIMIT 10
 ";

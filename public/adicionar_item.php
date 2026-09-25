@@ -29,7 +29,7 @@ try {
     $con->begin_transaction();
 
     // 1) Pedido precisa estar ABERTO
-    $st = $con->prepare("SELECT id FROM pedidos WHERE id=? AND status='aberto' LIMIT 1");
+    $st = $con->prepare("SELECT id FROM pedidos WHERE id=? AND excluido_em IS NULL AND status='aberto' LIMIT 1");
     $st->bind_param('i', $pedido_id);
     $st->execute();
     if ($st->get_result()->num_rows === 0) {
@@ -74,14 +74,14 @@ try {
     $st = $con->prepare("
         UPDATE pedidos p
            SET p.total = (SELECT COALESCE(SUM(subtotal),0) FROM itens_pedido WHERE pedido_id = ?)
-         WHERE p.id = ?
+         WHERE p.id = ? AND p.excluido_em IS NULL
     ");
     $st->bind_param('ii', $pedido_id, $pedido_id);
     $st->execute();
     $st->close();
 
     // 6) Lê total atualizado e estoque atual pós-baixa
-    $st = $con->prepare("SELECT total FROM pedidos WHERE id=?");
+    $st = $con->prepare("SELECT total FROM pedidos WHERE id=? AND excluido_em IS NULL");
     $st->bind_param('i', $pedido_id);
     $st->execute();
     $total = (float)($st->get_result()->fetch_assoc()['total'] ?? 0.0);

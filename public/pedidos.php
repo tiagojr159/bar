@@ -49,7 +49,7 @@ $sql = "
          m.numero AS mesa_numero
   FROM pedidos p
   LEFT JOIN mesas m ON m.id = p.mesa_id
-  WHERE p.data_pedido BETWEEN ? AND ?
+  WHERE p.excluido_em IS NULL AND p.data_pedido BETWEEN ? AND ?
 ";
 $params = [$iniStr, $fimStr];
 $types  = 'ss';
@@ -76,7 +76,7 @@ $sumSql = "
     SUM(CASE WHEN status <> 'pago'  THEN 1 ELSE 0 END) AS cnt_aberto,
     COUNT(*) AS cnt_total
   FROM pedidos
-  WHERE data_pedido BETWEEN ? AND ?
+  WHERE excluido_em IS NULL AND data_pedido BETWEEN ? AND ?
 ";
 $sumTypes = 'ss';
 $sumParams = [$iniStr, $fimStr];

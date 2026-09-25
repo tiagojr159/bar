@@ -12,7 +12,7 @@ try {
   if ($item_id <= 0 || $delta === 0) { echo json_encode(['sucesso'=>false,'mensagem'=>'Dados inválidos.']); exit; }
 
   // pega item e pedido
-  $st = $cx->prepare("SELECT pedido_id, quantidade, preco_unitario FROM itens_pedido WHERE id = ?");
+  $st = $cx->prepare("SELECT ip.pedido_id, ip.quantidade, ip.preco_unitario FROM itens_pedido ip JOIN pedidos p ON p.id = ip.pedido_id AND p.excluido_em IS NULL WHERE ip.id = ?");
   $st->bind_param('i', $item_id);
   $st->execute();
   $it = $st->get_result()->fetch_assoc(); $st->close();

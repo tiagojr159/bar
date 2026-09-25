@@ -26,7 +26,7 @@ try {
     }
 
     // valida pedido aberto
-    $st = $con->prepare("SELECT status FROM pedidos WHERE id=? LIMIT 1");
+    $st = $con->prepare("SELECT status FROM pedidos WHERE id=? AND excluido_em IS NULL LIMIT 1");
     $st->bind_param('i', $pedido_id);
     $st->execute();
     $p = $st->get_result()->fetch_assoc();
@@ -91,7 +91,7 @@ try {
 
     $t = (float)($sum['t'] ?? 0.0);
 
-    $st = $con->prepare("UPDATE pedidos SET total=? WHERE id=?");
+    $st = $con->prepare("UPDATE pedidos SET total=? WHERE id=? AND excluido_em IS NULL");
     $st->bind_param('di', $t, $pedido_id);
     $st->execute();
     $st->close();

@@ -32,7 +32,7 @@ try {
   $con->begin_transaction();
 
   // (opcional) garante pedido em aberto
-  $st = $con->prepare("SELECT id FROM pedidos WHERE id = ? AND status = 'aberto' LIMIT 1");
+  $st = $con->prepare("SELECT id FROM pedidos WHERE id = ? AND excluido_em IS NULL AND status = 'aberto' LIMIT 1");
   $st->bind_param('i', $pedido_id);
   $st->execute();
   if ($st->get_result()->num_rows === 0) {
@@ -82,7 +82,7 @@ try {
   $st->execute();
   $soma = (float)($st->get_result()->fetch_assoc()['soma'] ?? 0);
 
-  $upPed = $con->prepare("UPDATE pedidos SET total = ? WHERE id = ?");
+  $upPed = $con->prepare("UPDATE pedidos SET total = ? WHERE id = ? AND excluido_em IS NULL");
   $upPed->bind_param('di', $soma, $pedido_id);
   $upPed->execute();
 

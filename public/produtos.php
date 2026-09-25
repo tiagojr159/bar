@@ -48,7 +48,7 @@ function selectProdutoView(mysqli $con, int $id = 0): array {
       p.estoque                                       AS estoque_atual,
       p.imagem,
       p.ativo,
-      COALESCE(SUM(CASE WHEN ped.status <> 'cancelado' THEN ip.quantidade ELSE 0 END), 0) AS vendidos
+      COALESCE(SUM(CASE WHEN ped.status <> 'cancelado' AND ped.excluido_em IS NULL THEN ip.quantidade ELSE 0 END), 0) AS vendidos
     FROM produtos p
     LEFT JOIN itens_pedido ip ON ip.produto_id = p.id
     LEFT JOIN pedidos ped     ON ped.id       = ip.pedido_id

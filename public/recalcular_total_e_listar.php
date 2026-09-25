@@ -33,7 +33,7 @@ try {
 
     $total = (float)($res['t'] ?? 0);
 
-    $st = $con->prepare("UPDATE pedidos SET total = ? WHERE id = ?");
+    $st = $con->prepare("UPDATE pedidos SET total = ? WHERE id = ? AND excluido_em IS NULL");
     $st->bind_param('di', $total, $pedido_id);
     $st->execute();
     $st->close();

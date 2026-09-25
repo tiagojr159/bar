@@ -44,7 +44,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST' && ($_POST['acao'] ?? '') === 
     $con->begin_transaction();
 
     // (1) Opcional mas recomendado: fechar pedidos ainda abertos do ciclo anterior
-    $con->query("UPDATE pedidos SET status = 'fechado' WHERE LOWER(status) = 'aberto'");
+    $con->query("UPDATE pedidos SET status = 'fechado' WHERE excluido_em IS NULL AND LOWER(status) = 'aberto'");
 
     // (2) Resetar a numeração visível das mesas para reiniciar do 1 no próximo ciclo.
     // Se a coluna 'numero' NÃO for UNIQUE, você pode usar 0:

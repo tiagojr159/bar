@@ -20,7 +20,7 @@ if ($ultimaAbertura !== null) {
             LEFT JOIN mesas m ON m.id = p.mesa_id
             JOIN itens_pedido i ON i.pedido_id = p.id
             JOIN produtos pr ON pr.id = i.produto_id
-           WHERE p.status IN ('pago','fechado')
+           WHERE p.excluido_em IS NULL AND p.status IN ('pago','fechado')
              AND COALESCE(p.data_pagamento, p.data_pedido) >= ?
              AND COALESCE(p.data_pagamento, p.data_pedido) <= NOW()
            ORDER BY COALESCE(p.data_pagamento, p.data_pedido) ASC, p.id ASC, pr.nome ASC";

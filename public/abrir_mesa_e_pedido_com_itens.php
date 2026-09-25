@@ -91,7 +91,7 @@ try {
   }
 
   // 5) atualiza total do pedido
-  $st = $con->prepare("UPDATE pedidos SET total=? WHERE id=?");
+  $st = $con->prepare("UPDATE pedidos SET total=? WHERE id=? AND excluido_em IS NULL");
   $st->bind_param('di', $total, $pedido_id);
   $st->execute();
 

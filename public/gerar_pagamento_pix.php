@@ -36,7 +36,7 @@ try {
     if ($pedido_id <= 0) { echo json_encode(['success'=>false,'error'=>'pedido_id inválido']); exit; }
 
     // Pedido
-    $st = $con->prepare("SELECT id, status, total, pagamento_id FROM pedidos WHERE id=? LIMIT 1");
+    $st = $con->prepare("SELECT id, status, total, pagamento_id FROM pedidos WHERE id=? AND excluido_em IS NULL LIMIT 1");
     $st->bind_param('i', $pedido_id);
     $st->execute();
     $st->bind_result($id_db, $status_db, $total_db, $pagamento_id_db);
@@ -102,7 +102,7 @@ try {
     }
 
     // Vincula no pedido
-    $stUp = $con->prepare("UPDATE pedidos SET pagamento_id=?, total=? WHERE id=?");
+    $stUp = $con->prepare("UPDATE pedidos SET pagamento_id=?, total=? WHERE id=? AND excluido_em IS NULL");
     $total_to_set = (float) number_format($tx_amount, 2, '.', '');
     $stUp->bind_param('sdi', $mpId, $total_to_set, $pedido_id);
     $stUp->execute();

@@ -26,8 +26,20 @@ try {
   $pagamento_id = isset($_REQUEST['pagamento_id']) ? trim($_REQUEST['pagamento_id']) : '';
   $pedido_id    = isset($_REQUEST['pedido_id']) ? (int)$_REQUEST['pedido_id'] : 0;
 
+  if ($pedido_id > 0) {
+    $stAtivo = $con->prepare("SELECT id FROM pedidos WHERE id = ? AND excluido_em IS NULL LIMIT 1");
+    $stAtivo->bind_param('i', $pedido_id);
+    $stAtivo->execute();
+    $pedidoAtivo = $stAtivo->get_result()->fetch_assoc();
+    $stAtivo->close();
+    if (!$pedidoAtivo) {
+      echo json_encode(['success' => false, 'error' => 'Pedido indisponível']);
+      exit;
+    }
+  }
+
   if ($pagamento_id === '' && $pedido_id > 0) {
-    $st = $con->prepare("SELECT pagamento_id FROM pedidos WHERE id=? LIMIT 1");
+    $st = $con->prepare("SELECT pagamento_id FROM pedidos WHERE id=? AND excluido_em IS NULL LIMIT 1");
     $st->bind_param('i', $pedido_id);
     $st->execute();
     $st->bind_result($pag_id_db);
@@ -74,13 +86,13 @@ try {
        SET status='pago',
            forma_pagamento=?,
            data_pagamento=IFNULL(data_pagamento, NOW())
-     WHERE id=?");
+     WHERE id=? AND excluido_em IS NULL");
     $st2->bind_param('si', $forma, $pedido_id);
     $st2->execute();
     $st2->close();
 
     // === NOVO BLOCO: Reduz estoque dos produtos ===
-    $stmt = $con->prepare("SELECT produto_id, quantidade FROM itens_pedido WHERE pedido_id = ?");
+    $stmt = $con->prepare("SELECT i.produto_id, i.quantidade FROM itens_pedido i JOIN pedidos p ON p.id = i.pedido_id WHERE i.pedido_id = ? AND p.excluido_em IS NULL");
     $stmt->bind_param('i', $pedido_id);
     $stmt->execute();
     $result = $stmt->get_result();

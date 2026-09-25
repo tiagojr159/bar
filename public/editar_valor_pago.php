@@ -23,10 +23,10 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
     $erro = 'Informe um valor válido com até duas casas decimais.';
   } else {
     $valorPago = (float)$normalizado;
-    $stUpdate = $con->prepare("UPDATE pedidos SET total = ? WHERE id = ? AND status IN ('pago','fechado')");
+    $stUpdate = $con->prepare("UPDATE pedidos SET total = ? WHERE id = ? AND excluido_em IS NULL AND status IN ('pago','fechado')");
     $stUpdate->bind_param('di', $valorPago, $pedidoId);
     $stUpdate->execute();
-    $stCheck = $con->prepare("SELECT id FROM pedidos WHERE id = ? AND status IN ('pago','fechado') LIMIT 1");
+    $stCheck = $con->prepare("SELECT id FROM pedidos WHERE id = ? AND excluido_em IS NULL AND status IN ('pago','fechado') LIMIT 1");
     $stCheck->bind_param('i', $pedidoId);
     $stCheck->execute();
     $pedidoExiste = (bool)$stCheck->get_result()->fetch_assoc();
@@ -40,7 +40,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
   }
 }
 
-$st = $con->prepare("SELECT id, total, status, COALESCE(data_pagamento, data_pedido) AS data_pagamento FROM pedidos WHERE id = ? AND status IN ('pago','fechado') LIMIT 1");
+$st = $con->prepare("SELECT id, total, status, COALESCE(data_pagamento, data_pedido) AS data_pagamento FROM pedidos WHERE id = ? AND excluido_em IS NULL AND status IN ('pago','fechado') LIMIT 1");
 $st->bind_param('i', $pedidoId);
 $st->execute();
 $pedido = $st->get_result()->fetch_assoc();

@@ -52,7 +52,7 @@ if (isset($_GET['ajax']) && $_GET['ajax'] == '1') {
             JOIN (
               SELECT mesa_id, MAX(id) AS max_id
                 FROM pedidos
-               WHERE status = 'aberto'
+               WHERE excluido_em IS NULL AND status = 'aberto'
                GROUP BY mesa_id
             ) ult ON ult.mesa_id = p1.mesa_id AND ult.max_id = p1.id
         ) p ON p.mesa_id = m.id
@@ -155,7 +155,7 @@ if (isset($_GET['ajax']) && $_GET['ajax'] == '1') {
     $stmt = $con->prepare("
       SELECT p.id
         FROM pedidos p
-       WHERE p.mesa_id=? AND p.status='aberto'
+       WHERE p.mesa_id=? AND p.excluido_em IS NULL AND p.status='aberto'
        ORDER BY p.id DESC
        LIMIT 1
     ");

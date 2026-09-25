@@ -20,7 +20,7 @@ $rsAbertura = $conexao->query("SELECT MAX(data_abertura) AS data_abertura FROM a
 $ultimaAbertura = $rsAbertura ? ($rsAbertura->fetch_assoc()['data_abertura'] ?? null) : null;
 $apuradoCaixa = 0.0;
 if ($ultimaAbertura !== null) {
-  $stApurado = $conexao->prepare("SELECT COALESCE(SUM(total), 0) AS total FROM pedidos WHERE status IN ('pago','fechado') AND COALESCE(data_pagamento, data_pedido) >= ? AND COALESCE(data_pagamento, data_pedido) <= NOW()");
+  $stApurado = $conexao->prepare("SELECT COALESCE(SUM(total), 0) AS total FROM pedidos WHERE excluido_em IS NULL AND status IN ('pago','fechado') AND COALESCE(data_pagamento, data_pedido) >= ? AND COALESCE(data_pagamento, data_pedido) <= NOW()");
   $stApurado->bind_param('s', $ultimaAbertura);
   $stApurado->execute();
   $apuradoCaixa = (float)($stApurado->get_result()->fetch_assoc()['total'] ?? 0);
@@ -42,7 +42,7 @@ $sql = "
          JOIN (
            SELECT mesa_id, MAX(id) AS max_id
              FROM pedidos
-            WHERE status = 'aberto'
+            WHERE excluido_em IS NULL AND status = 'aberto'
             GROUP BY mesa_id
          ) ult
            ON ult.mesa_id = p1.mesa_id

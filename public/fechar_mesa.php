@@ -61,7 +61,7 @@ try {
     if ($forma === '')          $json_fail('Parâmetros inválidos: forma_pagamento');
 
     // === Busca o pedido (deve estar aberto) ===
-    $st = $con->prepare("SELECT id, status, total FROM pedidos WHERE id = ? LIMIT 1");
+    $st = $con->prepare("SELECT id, status, total FROM pedidos WHERE id = ? AND excluido_em IS NULL LIMIT 1");
     $st->bind_param('i', $pedido_id);
     $st->execute();
     $p = $st->get_result()->fetch_assoc();
@@ -92,7 +92,7 @@ try {
                SET status = ?,
                    data_pagamento = NOW(),
                    forma_pagamento = ?
-             WHERE id = ?
+             WHERE id = ? AND excluido_em IS NULL
         ");
         $st2->bind_param('ssi', $statusNovo, $formaFinal, $pedido_id);
         $st2->execute();
@@ -115,7 +115,7 @@ try {
                SET status = ?,
                    data_pagamento = NOW(),
                    forma_pagamento = ?
-             WHERE id = ?
+             WHERE id = ? AND excluido_em IS NULL
         ");
         $st2->bind_param('ssi', $statusNovo, $forma, $pedido_id);
         $st2->execute();
@@ -142,7 +142,7 @@ try {
                SET status = ?,
                    data_pagamento = NOW(),
                    forma_pagamento = ?
-             WHERE id = ?
+             WHERE id = ? AND excluido_em IS NULL
         ");
         $st2->bind_param('ssi', $statusNovo, $forma, $pedido_id);
         $st2->execute();

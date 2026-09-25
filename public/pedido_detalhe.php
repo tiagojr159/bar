@@ -48,7 +48,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST' && isset($_POST['_mesa_action'
       $novaMesaId = $st->insert_id;
       $st->close();
 
-      $st2 = $con->prepare("UPDATE pedidos SET mesa_id=? WHERE id=?");
+      $st2 = $con->prepare("UPDATE pedidos SET mesa_id=? WHERE id=? AND excluido_em IS NULL");
       $st2->bind_param('ii', $novaMesaId, $pedido_id);
       $st2->execute();
       $st2->close();
@@ -82,7 +82,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST' && isset($_POST['_mesa_action'
       }
 
       // vincula pedido
-      $stL = $con->prepare("UPDATE pedidos SET mesa_id=? WHERE id=?");
+      $stL = $con->prepare("UPDATE pedidos SET mesa_id=? WHERE id=? AND excluido_em IS NULL");
       $stL->bind_param('ii', $mesaId, $pedido_id);
       $stL->execute();
       $stL->close();
@@ -120,7 +120,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST' && !isset($_POST['_mesa_action
     }
 
     if ($cols) {
-      $sql = 'UPDATE pedidos SET '.implode(',', $cols).' WHERE id=? LIMIT 1';
+      $sql = 'UPDATE pedidos SET '.implode(',', $cols).' WHERE id=? AND excluido_em IS NULL LIMIT 1';
       $types .= 'i';
       $params[] = $pedido_id;
 
@@ -143,7 +143,7 @@ $sql = "
   FROM pedidos p
   LEFT JOIN mesas m   ON m.id = p.mesa_id
   LEFT JOIN usuarios u ON u.id = p.usuario_id
-  WHERE p.id = ?
+  WHERE p.id = ? AND p.excluido_em IS NULL
   LIMIT 1
 ";
 $st = $con->prepare($sql);

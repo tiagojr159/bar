@@ -1,11 +1,3 @@
-<?php include __DIR__ . '/../views/partials/header.php'; ?>
-
-<style>
-  .status-pago { background-color:#28a745; color:#fff; }
-  .status-aberto { background-color:#ffc107; color:#000; }
-  .status-fechado { background-color:#6c757d; color:#fff; }
-</style>
-
 <?php
 // relatorios.php
 if (session_status() !== PHP_SESSION_ACTIVE) {
@@ -22,6 +14,39 @@ if (!($con instanceof mysqli)) {
   die('Erro: conexão MySQLi não inicializada.');
 }
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+
+$nivelUsuario = $_SESSION['usuario_nivel'] ?? ($_SESSION['usuario']['usuario_nivel'] ?? null);
+$isAdmin = ((string)$nivelUsuario === '1');
+if (empty($_SESSION['csrf_excluir_pedido'])) {
+  $_SESSION['csrf_excluir_pedido'] = bin2hex(random_bytes(32));
+}
+$mensagemExclusao = '';
+if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST' && ($_POST['acao'] ?? '') === 'excluir_pedido') {
+  if (!$isAdmin) {
+    http_response_code(403);
+    exit('Apenas o administrador pode apagar pedidos.');
+  }
+  $token = (string)($_POST['csrf_token'] ?? '');
+  if (!hash_equals($_SESSION['csrf_excluir_pedido'], $token)) {
+    http_response_code(403);
+    exit('Solicitação inválida. Atualize a página e tente novamente.');
+  }
+  $pedidoExcluir = (int)($_POST['pedido_id'] ?? 0);
+  if ($pedidoExcluir <= 0) {
+    $mensagemExclusao = 'Pedido inválido.';
+  } else {
+    try {
+      $stDelPedido = $con->prepare('UPDATE pedidos SET excluido_em = NOW() WHERE id = ? AND excluido_em IS NULL LIMIT 1');
+      $stDelPedido->bind_param('i', $pedidoExcluir);
+      $stDelPedido->execute();
+      $apagado = $stDelPedido->affected_rows > 0;
+      $stDelPedido->close();
+      $mensagemExclusao = $apagado ? 'Pedido removido da lista. O histórico e os itens foram preservados.' : 'Pedido não encontrado.';
+    } catch (Throwable $e) {
+      $mensagemExclusao = 'Não foi possível apagar o pedido.';
+    }
+  }
+}
 
 /** Período (padrão: últimos 7 dias) */
 date_default_timezone_set('America/Recife');
@@ -83,7 +108,7 @@ while ($r = $estoqueRs->fetch_assoc()) {
 $sqlResumo = "
   SELECT status, COUNT(*) AS qtd, COALESCE(SUM(total),0) AS soma
   FROM pedidos
-  WHERE data_pedido BETWEEN ? AND ?
+  WHERE excluido_em IS NULL AND data_pedido BETWEEN ? AND ?
   GROUP BY status
 ";
 $stResumo = $con->prepare($sqlResumo);
@@ -110,7 +135,7 @@ $sqlPedidos = "
          m.numero AS mesa_numero
   FROM pedidos p
   LEFT JOIN mesas m ON m.id = p.mesa_id
-  WHERE p.data_pedido BETWEEN ? AND ?
+  WHERE p.excluido_em IS NULL AND p.data_pedido BETWEEN ? AND ?
   ORDER BY p.data_pedido DESC
 ";
 $stPed = $con->prepare($sqlPedidos);
@@ -124,7 +149,7 @@ $pedidos = $stPed->get_result()->fetch_all(MYSQLI_ASSOC);
 $sqlFat = "
   SELECT DATE(p.data_pedido) AS dia, COALESCE(SUM(p.total),0) AS faturamento
   FROM pedidos p
-  WHERE p.status = 'fechado'
+  WHERE p.excluido_em IS NULL AND p.status = 'fechado'
     AND p.data_pedido BETWEEN ? AND ?
   GROUP BY DATE(p.data_pedido)
   ORDER BY dia DESC
@@ -165,7 +190,7 @@ if ($ultimaAbertura !== null) {
     FROM itens_pedido i
     JOIN pedidos p   ON p.id = i.pedido_id
     JOIN produtos pr ON pr.id = i.produto_id
-    WHERE p.status IN ('pago','fechado')
+    WHERE p.excluido_em IS NULL AND p.status IN ('pago','fechado')
       AND COALESCE(p.data_pagamento, p.data_pedido) >= ?
       AND COALESCE(p.data_pagamento, p.data_pedido) <= NOW()
     GROUP BY pr.id, pr.nome, pr.imagem
@@ -225,7 +250,7 @@ if (!empty($intervalos)) {
     FROM itens_pedido i
     JOIN pedidos p   ON p.id = i.pedido_id
     JOIN produtos pr ON pr.id = i.produto_id
-    WHERE p.status IN ('pago','fechado')
+    WHERE p.excluido_em IS NULL AND p.status IN ('pago','fechado')
       AND COALESCE(p.data_pagamento, p.data_pedido) >= ?
       AND COALESCE(p.data_pagamento, p.data_pedido) <  ?
     GROUP BY pr.id, pr.nome, pr.imagem
@@ -242,7 +267,7 @@ if (!empty($intervalos)) {
     FROM itens_pedido i
     JOIN pedidos p   ON p.id = i.pedido_id
     JOIN produtos pr ON pr.id = i.produto_id
-    WHERE p.status IN ('pago','fechado')
+    WHERE p.excluido_em IS NULL AND p.status IN ('pago','fechado')
       AND COALESCE(p.data_pagamento, p.data_pedido) >= ?
       AND COALESCE(p.data_pagamento, p.data_pedido) <= NOW()
     GROUP BY pr.id, pr.nome, pr.imagem
@@ -285,7 +310,7 @@ $sqlDiaUsuario = "
     COALESCE(SUM(p.total),0)                       AS soma
   FROM pedidos p
   LEFT JOIN usuarios u ON u.id = p.usuario_id
-  WHERE p.status IN ('pago','fechado')
+  WHERE p.excluido_em IS NULL AND p.status IN ('pago','fechado')
     AND DATE(COALESCE(p.data_pagamento, p.data_pedido)) >= ?
     AND DATE(COALESCE(p.data_pagamento, p.data_pedido)) <= ?
   GROUP BY DATE(COALESCE(p.data_pagamento, p.data_pedido)), usuario
@@ -336,10 +361,14 @@ function dBR($ts){ return $ts ? date('d/m/Y H:i', strtotime($ts)) : '-'; }
     .badge{display:inline-block;background:#111;color:#fff;border-radius:999px;padding:2px 8px;font-size:.8rem}
     .status-aberto{background:#ffc107;color:#111}
     .status-fechado{background:#28a745}
+    .btn-danger{display:inline-block;background:#dc3545;color:#fff;border:0;border-radius:8px;padding:6px 9px;cursor:pointer;font:inherit;font-size:.85rem}
+    .flash-delete{padding:10px 12px;margin-bottom:12px;border-radius:8px;background:#fff3cd;color:#664d03}
   </style>
 </head>
 <body>
+  <?php include __DIR__ . '/../views/partials/header.php'; ?>
   <div class="container">
+    <?php if ($mensagemExclusao !== ''): ?><div class="flash-delete"><?= h($mensagemExclusao) ?></div><?php endif; ?>
 
     <div class="card">
       <h3>Período</h3>
@@ -480,6 +509,7 @@ function dBR($ts){ return $ts ? date('d/m/Y H:i', strtotime($ts)) : '-'; }
                   <th>Data</th>
                   <th>Status</th>
                   <th>Total</th>
+                  <?php if ($isAdmin): ?><th>Ações</th><?php endif; ?>
                 </tr>
               </thead>
               <tbody>
@@ -503,6 +533,16 @@ function dBR($ts){ return $ts ? date('d/m/Y H:i', strtotime($ts)) : '-'; }
                       <span class="badge <?= $classe ?>"><?= strtoupper($st) ?></span>
                     </td>
                     <td><?= moeda($pd['total']) ?></td>
+                    <?php if ($isAdmin): ?>
+                      <td>
+                        <form method="post" onsubmit="return confirm('Marcar o pedido #<?= (int)$pd['id'] ?> como excluído? O histórico será preservado.');" style="margin:0">
+                          <input type="hidden" name="acao" value="excluir_pedido">
+                          <input type="hidden" name="pedido_id" value="<?= (int)$pd['id'] ?>">
+                          <input type="hidden" name="csrf_token" value="<?= h($_SESSION['csrf_excluir_pedido']) ?>">
+                          <button type="submit" class="btn-danger">Apagar</button>
+                        </form>
+                      </td>
+                    <?php endif; ?>
                   </tr>
                 <?php endforeach; ?>
               </tbody>

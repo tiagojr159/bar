@@ -34,6 +34,7 @@ try {
           p.imagem
       FROM itens_pedido ip
       JOIN produtos p ON p.id = ip.produto_id
+      JOIN pedidos ped ON ped.id = ip.pedido_id AND ped.excluido_em IS NULL
       WHERE ip.pedido_id = ?
       GROUP BY ip.produto_id, p.nome, p.imagem
       ORDER BY MAX(ip.id) DESC
