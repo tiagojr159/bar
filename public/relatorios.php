@@ -633,14 +633,16 @@ function dBR($ts){ return $ts ? date('d/m/Y H:i', strtotime($ts)) : '-'; }
               <?php foreach ($vendidosPorIntervalo as $blk): ?>
                 <tr>
                   <td>
-                    <?= h(dBR($blk['ini'])) ?>
+                    <a class="caixa-link" href="detalhe_caixa.php?id=<?= (int)$blk['abertura_id'] ?>" aria-label="Ver vendas do caixa #<?= (int)$blk['abertura_id'] ?>">
+                      <?= h(dBR($blk['ini'])) ?>
                     <?php if (!empty($blk['usuario_nome'])): ?>
                       <div class="muted" style="font-size:.85rem;">
                         Abertura #<?= (int)$blk['abertura_id'] ?> — <?= h($blk['usuario_nome']) ?>
                       </div>
                     <?php endif; ?>
+                    </a>
                   </td>
-                  <td><?= moeda($blk['tot_valor']) ?></td>
+                  <td><a class="caixa-link" href="detalhe_caixa.php?id=<?= (int)$blk['abertura_id'] ?>"><?= moeda($blk['tot_valor']) ?></a></td>
                 </tr>
               <?php endforeach; ?>
             </tbody>
