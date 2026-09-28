@@ -723,6 +723,12 @@ body {
     background: #176b36;
     color:#fff;
   }
+  .pm-option:has(input[name="payment-method"]:checked){
+    border-color:#16a34a;
+    outline:2px solid rgba(22,163,74,.28);
+    background:#176b36;
+    color:#fff;
+  }
 
   .payment-form{ margin-top:12px; }
   #dinheiro-payment-form label{ display:block; margin-bottom:6px; }

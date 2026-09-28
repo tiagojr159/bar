@@ -234,6 +234,15 @@ $(function () {
     else if (v === 'cartao') $('#cartao-payment-form').show();
   });
 
+  // O alvo clicável é o label; sincroniza o visual imediatamente em toque mobile.
+  $(document).on('click', '.pm-option', function () {
+    const $option = $(this);
+    const $radio = $option.find('input[name="payment-method"]');
+    if (!$radio.prop('checked')) $radio.prop('checked', true).trigger('change');
+    $('.pm-option').removeClass('active').attr('aria-selected', 'false');
+    $option.addClass('active').attr('aria-selected', 'true');
+  });
+
   // ---------- Campo "valor a cobrar" ----------
   $('#valor-cobrar').off('input.cobrar').on('input.cobrar', function () {
     let raw = $(this).val().replace(/\D/g, '');
