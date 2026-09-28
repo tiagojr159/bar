@@ -174,6 +174,12 @@ window.normalizeValor = function (vRaw) {
 /* ===========================
    Pagamento / Fechar Mesa
    =========================== */
+// Chrome no Android pode restaurar a página inteira do back-forward cache,
+// mantendo DOM e CSS antigos mesmo depois de limpar o cache do navegador.
+window.addEventListener('pageshow', function (event) {
+  if (event.persisted) window.location.reload();
+});
+
 $(function () {
   // Estado atual (também espelhado no window para compatibilidade)
   let currentPedidoId = null;
