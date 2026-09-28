@@ -1,6 +1,11 @@
 <?php
 // mesas.php
 
+// Evita que o navegador reutilize o HTML antigo da tela de mesas.
+header('Cache-Control: no-cache, no-store, must-revalidate, max-age=0');
+header('Pragma: no-cache');
+header('Expires: 0');
+
 // Sessão
 if (session_status() !== PHP_SESSION_ACTIVE) {
   session_start();
@@ -97,7 +102,7 @@ foreach ($mesas as $mesa_id => $mesa) {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Mesas - Bar Azerutan</title>
-  <link rel="stylesheet" href="assets/css/mesas.css">
+  <link rel="stylesheet" href="assets/css/mesas.css?v=<?= (int) @filemtime(__DIR__ . '/assets/css/mesas.css') ?>">
 
   <!-- Estilo mínimo para a “div azul” das notificações -->
   <style>
@@ -522,7 +527,7 @@ foreach ($mesas as $mesa_id => $mesa) {
 
   <!-- Scripts -->
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script src="assets/js/mesas.js"></script>
+  <script src="assets/js/mesas.js?v=<?= (int) @filemtime(__DIR__ . '/assets/js/mesas.js') ?>"></script>
 
   <!-- ========== Script de integração das notificações + auto-atualização ==========
        Só adiciona comportamentos; não altera fluxos existentes. -->
