@@ -233,9 +233,9 @@ foreach ($mesas as $mesa_id => $mesa) {
     #nova-mesa-modal .pm-card{position:relative;border:1px solid #e5eae4;border-radius:19px;background:#fff;box-shadow:0 4px 14px rgba(24,47,29,.055);transition:transform .18s,border-color .18s,box-shadow .18s}
     #nova-mesa-modal .pm-card:hover{transform:translateY(-4px);border-color:#a9cdb0;box-shadow:0 14px 28px rgba(24,47,29,.12)}
     #nova-mesa-modal .pm-card:active{transform:scale(.985)}
-    #nova-mesa-modal .pm-thumb{position:relative;aspect-ratio:1.15/1;overflow:hidden;background:#e9eee8}
-    #nova-mesa-modal .pm-thumb img{width:100%;height:100%;object-fit:cover;transition:transform .35s}
-    #nova-mesa-modal .pm-card:hover .pm-thumb img{transform:scale(1.045)}
+    #nova-mesa-modal .pm-thumb{position:relative;aspect-ratio:1.15/1;overflow:hidden;background:#fff}
+    #nova-mesa-modal .pm-thumb img{width:100%;height:100%;object-fit:contain;transition:none}
+    #nova-mesa-modal .pm-card:hover .pm-thumb img{transform:none}
     #nova-mesa-modal .pm-noimg{width:100%;height:100%;display:grid;place-items:center;padding:14px;color:#718074;background:linear-gradient(145deg,#edf2eb,#e2e9e1);font-size:.9rem}
     #nova-mesa-modal .pm-name{min-height:55px;padding:13px 14px 15px;color:#1e3023;font-size:1.04rem;font-weight:750;line-height:1.28;white-space:normal;overflow:visible;text-overflow:clip;box-sizing:border-box}
     #nova-mesa-modal .pm-price,#nova-mesa-modal .pm-stock,#nova-mesa-modal .sel-badge{z-index:2;min-height:34px;display:inline-flex;align-items:center;justify-content:center;padding:7px 11px;border:1px solid rgba(255,255,255,.3);border-radius:11px;color:#fff;font-size:1rem;font-weight:900;line-height:1;font-variant-numeric:tabular-nums;box-shadow:0 4px 12px rgba(0,0,0,.24)}
