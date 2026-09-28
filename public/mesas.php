@@ -14,6 +14,9 @@ if (session_status() !== PHP_SESSION_ACTIVE) {
 require __DIR__ . '/../bootstrap.php';
 require __DIR__ . '/verificar_sessao.php'; // redireciona se não logado
 
+$mesasCssVersion = substr((string) @md5_file(__DIR__ . '/assets/css/mesas.css'), 0, 12);
+$mesasJsVersion = substr((string) @md5_file(__DIR__ . '/assets/js/mesas.js'), 0, 12);
+
 use App\Support\DB;
 
 $conexao = DB::conn();
@@ -102,7 +105,7 @@ foreach ($mesas as $mesa_id => $mesa) {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Mesas - Bar Azerutan</title>
-  <link rel="stylesheet" href="assets/css/mesas.css?v=<?= (int) @filemtime(__DIR__ . '/assets/css/mesas.css') ?>">
+  <link rel="stylesheet" href="assets/css/mesas.css?v=<?= htmlspecialchars($mesasCssVersion, ENT_QUOTES, 'UTF-8') ?>">
 
   <!-- Estilo mínimo para a “div azul” das notificações -->
   <style>
@@ -527,7 +530,7 @@ foreach ($mesas as $mesa_id => $mesa) {
 
   <!-- Scripts -->
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script src="assets/js/mesas.js?v=<?= (int) @filemtime(__DIR__ . '/assets/js/mesas.js') ?>"></script>
+  <script src="assets/js/mesas.js?v=<?= htmlspecialchars($mesasJsVersion, ENT_QUOTES, 'UTF-8') ?>"></script>
 
   <!-- ========== Script de integração das notificações + auto-atualização ==========
        Só adiciona comportamentos; não altera fluxos existentes. -->
