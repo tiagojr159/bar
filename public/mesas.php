@@ -410,8 +410,8 @@ foreach ($mesas as $mesa_id => $mesa) {
       <button class="close" aria-label="Fechar" onclick="document.getElementById('payment-modal').style.display='none'">×</button>
 
       <h3 id="dlg-title">Fechar Mesa</h3>
-      <p><strong id="payment-mesa">Mesa</strong></p>
-      <p>Total: <strong id="payment-valor">R$ 0,00</strong></p>
+      <p class="payment-mesa-line"><strong id="payment-mesa">Mesa</strong></p>
+      <p class="payment-total-line">Total: <strong id="payment-valor">R$ 0,00</strong></p>
 
       <!-- Valor a cobrar -->
       <div id="vc-wrapper">
@@ -466,9 +466,9 @@ foreach ($mesas as $mesa_id => $mesa) {
     <div class="modal-content">
       <button class="close" aria-label="Fechar">×</button>
 
-      <h3>Pagamento PIX</h3>
-      <p><strong id="pix-mesa">Mesa</strong></p>
-      <p>Valor: <strong id="pix-valor">R$ 0,00</strong></p>
+      <h3 class="pix-title">Aguardando pagamento</h3>
+      <p class="pix-table-line"><strong id="pix-mesa">Mesa</strong></p>
+      <p class="pix-amount-line"><strong id="pix-valor">R$ 0,00</strong></p>
 
       <div id="pix-qr-code" style="margin:12px 0; text-align:center;">
         <img id="pix-qr-img" src="" alt="QR Code PIX" style="width:250px;height:250px;object-fit:contain;">
@@ -818,6 +818,9 @@ foreach ($mesas as $mesa_id => $mesa) {
             $('#pix-code-text').val(pg.qr_code);
 
             $('#nova-mesa-modal').hide();
+            $('#pix-modal').removeClass('pix-approved');
+            $('#pix-modal .pix-title, #pix-modal .pix-amount-line, #pix-modal .pix-status, #pix-modal .modal-actions').show();
+            $('#pix-modal .modal-actions').html('<button id="cancel-pix-btn" class="btn btn-secondary">Fechar</button><button id="verify-payment-btn" class="btn btn-primary">Verificar agora</button>');
             $('#pix-modal').fadeIn(120);
 
             // Inicia polling (usa função global já existente)

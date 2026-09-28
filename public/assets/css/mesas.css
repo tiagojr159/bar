@@ -718,9 +718,9 @@ body {
   }
   .pm-option input{ display:none; }
   .pm-option.active{
-    border-color: var(--primary);
-    outline: 2px solid rgba(79,70,229,.25);
-    background: #171a24;
+    border-color: #16a34a;
+    outline: 2px solid rgba(22,163,74,.28);
+    background: #176b36;
     color:#fff;
   }
 
@@ -767,6 +767,35 @@ body {
       border-radius: 0 0 16px 16px;
     }
   }
+
+/* Pagamento PIX: tela cheia no celular e confirmação em tela verde. */
+#pix-modal .modal-content{position:relative;display:flex;flex-direction:column;width:min(520px,calc(100vw - 32px));max-height:calc(100dvh - 32px);padding:24px;box-sizing:border-box}
+#pix-modal .pix-table-line{display:none}
+#pix-modal .pix-amount-line{margin:8px 0 18px;text-align:center;color:#145c35;font-size:clamp(2.4rem,12vw,4.5rem);font-weight:900;line-height:1.05;font-variant-numeric:tabular-nums}
+#pix-modal .pix-title{margin:12px 0 0}
+#pix-modal #pix-qr-code{flex:1;min-height:180px;margin:8px 0;display:flex;align-items:center;justify-content:center}
+#pix-modal #pix-qr-code .pix-qr-img{width:min(360px,78vw);height:min(360px,48dvh)}
+#pix-modal .modal-actions{margin-top:auto!important;padding-top:14px;display:flex;gap:10px}
+#pix-modal .modal-actions .btn{flex:1;min-height:50px}
+#pix-modal:not(.pix-approved) .close{display:none}
+#pix-modal.pix-approved{background:#16a34a}
+#pix-modal.pix-approved .modal-content{width:100vw;height:100dvh;max-height:none;margin:0;padding:24px 20px calc(18px + env(safe-area-inset-bottom));border-radius:0;background:#16a34a;color:white;box-shadow:none}
+#pix-modal.pix-approved .close{color:white}
+#pix-modal.pix-approved #pix-qr-code{flex:1;width:100%;margin:0}
+#pix-modal.pix-approved #pix-ok-box{width:100%;height:100%;display:grid;place-items:center;background:#16a34a;color:#fff;text-align:center;font-size:clamp(2rem,9vw,4rem);font-weight:900}
+#pix-modal.pix-approved .modal-actions{width:100%;padding:12px 0 0;background:transparent}
+#pix-modal.pix-approved .modal-actions .btn{background:#fff;color:#146c37}
+@media(max-width:767px){
+  #payment-modal .modal-content{inset:0;width:100vw;height:100dvh;max-height:100dvh;border-radius:0;padding:28px 20px calc(100px + env(safe-area-inset-bottom));box-sizing:border-box}
+  #payment-modal .close{top:calc(12px + env(safe-area-inset-top));right:16px}
+  #payment-modal h3{font-size:1.4rem}
+  #payment-modal .payment-mesa-line,#payment-modal .payment-total-line{display:none}
+  #vc-wrapper{margin-top:24px}
+  #vc-wrapper label{font-size:1rem}
+  #vc-wrapper input{height:86px;text-align:center;font-size:clamp(2.6rem,13vw,4.5rem);font-weight:900;color:#a8e7b7;border:2px solid #398751}
+  #vc-wrapper small{display:block;margin-top:8px}
+  #payment-modal .modal-actions{position:fixed;bottom:0;padding:12px 16px calc(14px + env(safe-area-inset-bottom));background:#191b20}
+}
 
 /* --- FIX: modal de seleção de produtos rolar no mobile --- */
 /* Aplica aos modais cuja caixa tem a classe .modal-produtos (Nova mesa e Adicionar produtos) */

@@ -209,6 +209,7 @@ $(function () {
 
       const $modal = $('#payment-modal');
       $modal.find('input[name="payment-method"]').prop('checked', false);
+      $modal.find('.pm-option').removeClass('active').attr('aria-selected', 'false');
       $modal.find('.payment-form').hide();
 
       $modal.fadeIn(150);
@@ -225,6 +226,8 @@ $(function () {
   // ---------- Troca de forma de pagamento ----------
   $(document).on('change', 'input[name="payment-method"]', function () {
     $('.payment-form').hide();
+    $('.pm-option').removeClass('active').attr('aria-selected', 'false');
+    $(this).closest('.pm-option').addClass('active').attr('aria-selected', 'true');
     const v = $(this).val();
     if (v === 'pix') $('#pix-payment-form').show();
     else if (v === 'dinheiro') $('#dinheiro-payment-form').show();
@@ -439,21 +442,16 @@ $(function () {
 
         const $qr = $('#pix-qr-code img.pix-qr-img');
         if ($qr.length) {
-          const w = $qr.width();
-          const h = $qr.height();
           play_pix();
-          $('#pix-qr-code').html(
-            `<div id="pix-ok-box" style="width:${w}px;height:${h}px;display:flex;align-items:center;justify-content:center;background:#28a745;color:#fff;font-size:2rem;font-weight:bold;border-radius:6px">Pagamento efetuado.</div>`
-          );
+          $('#pix-modal').addClass('pix-approved');
+          $('#pix-qr-code').html('<div id="pix-ok-box">Pagamento efetuado.</div>');
+          $('#pix-modal .pix-title, #pix-modal .pix-table-line, #pix-modal .pix-amount-line, #pix-status-wrap, #pix-modal .pix-status').hide();
+          $('#pix-modal .pix-status').hide();
+          $('#pix-modal .modal-actions').html('<button id="cancel-pix-btn" class="btn btn-secondary">Fechar</button>');
         }
 
         const pid = pedidoId || window.currentPedidoId;
-        setTimeout(function () {
-          $('#pix-modal').hide();
-          if (pid) {
-            $(`.mesa-card[data-pedido-id="${pid}"]`).fadeOut(300, function () { $(this).remove(); });
-          }
-        }, 8000);
+        if (pid) $(`.mesa-card[data-pedido-id="${pid}"]`).fadeOut(300, function () { $(this).remove(); });
 
         return;
       } else if (['rejected', 'cancelled', 'expired'].includes(st)) {
@@ -477,6 +475,7 @@ $(function () {
     .on('click.closePix', '.close, #cancel-pix-btn', function (e) {
       e.preventDefault();
       $('#pix-modal').fadeOut(120);
+      $('#pix-modal').removeClass('pix-approved');
       if (pollInterval) clearInterval(pollInterval);
     });
 });
